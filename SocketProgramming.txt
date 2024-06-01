@@ -1,0 +1,178 @@
+HEADER FILES FOR SOCKET PROGRAMMING :
+
+#include<stdio.h> 
+
+-> This header file contains declarations used in most input and output and is typically included in all C programs.
+-> eg. printf() and scanf() are functions of this file.
+
+#include <sys/types.h>
+
+-> This header file contains definitions of a number of data types used in system calls.
+-> This header file is required to run the methods of the two header files (<sys/socket.h> & <netinet/in.h>).
+
+#include <sys/socket.h>
+
+-> The header file socket.h includes a number of definitions of structures needed for sockets. 
+-> Eg. define the sockaddr structures
+
+#include <netinet/in.h> 
+
+-> The header file in.h contains constants and structures needed for internet domain addresses.
+-> Eg. sockaddr_in (We will be using this structure.)
+
+#include <stdlib.h>
+
+-> This header defines four variable types, several macros, and various functions for performing general functions.
+-> E.g. int atoi(const char *str) (converts the string pointed to, by the argument str to an integer(type int)).
+
+#include <unistd.h>
+
+-> This file contains usefull functions like read(), write() and close().
+
+#include <string.h>
+
+-> This header file is required to perform string operations.
+
+
+CLIENT SERVER MODEL -- FUNCTIONS 
+
+SERVER = socket() --> bind() --> listen() --> accept() --> read() --> write() --> close() 
+                                                ^             ^          |           ^
+                                                |             |          |           |
+                                                |             |          v           v
+CLIENT = socket() --------------------------> connect() --> write() --> read() --> close()
+
+
+1) socket()
+
+-> int sockfd = socket(int domain, int type, int protocol);
+
+int domain = It is the address family. (AF_INET) --> Belongs to IPv4.
+int type = Contains many different types of transmission protocol. (SOCK_STREAM) is TCP and (SOCK_DGRAM) is UDP.
+int protocol = Defines the protocol in use. (0) --> for TCP.
+
+2) bind()
+
+-> int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+
+socket (sockfd) is created in the namespace i.e. an address family, but no address is assigned to it.
+bind() function assigns address specified by *addr which is the second parameter. 
+addrlen (3rd parameter) i.e. length of addr, specifies the size in bytes of the address structure pointed by addr.
+
+Following is the structure pointed by the *addr pointer (2nd parameter):
+
+struct sockaddr{
+    sa_family_t sa_famil;
+    char sa_data[14];
+}
+
+bind() function returns either 0 (success) or -1 (failure).
+
+3) listen()
+
+-> int listen(int sockfd, int backlog);
+
+The listen() function listen's for the connection on the socket.
+It marks the socket referred by the 'sockfd' file descriptor (1st parameter) as a passing socket i.e. the socket used for accepting the socket connections.
+
+int backlog = It specifies the number of connections a server can handle at a single time. i.e. number of devices that will be connecting to the server.
+
+4) accept()
+
+-> int newsockfd = accept(sockfd, (struct sockaddr *) &addr, &addrlen);
+
+All the further communications will be carried on newsockfd i.e. read, write etc.
+
+sockfd (1st parameter) = socket file descriptor.
+(struct sockaddr *) &addr (2nd parameter) = structure of addr.
+&addrlen (3rd parameter) = address length.
+
+5) int connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen);
+
+It returns 0 (success) or -1 (failure).
+
+1st parameter = socket file descriptor (sockfd).
+2nd parameter = address pointer pointing to the sockaddr structure.
+3rd parameter = length of address.
+
+6) read()
+
+-> int read(newsockfd, buffer, buffer_size);
+
+1st parameter (newsockfd) = new socket file descriptor.
+2nd parameter (buffer) = string, message or data. 
+3rd parameter (buffer_size) = size of the string or message. 
+
+7) write()
+
+-> int write(newsockfd, buffer, buffer_size);
+
+1st parameter (newsockfd) = new socket file descriptor.
+2nd parameter (buffer) = string, message or data. 
+3rd parameter (buffer_size) = size of the string or message. 
+
+NOTE : There are two more functions for reading and writing i.e. send() and receive(). It has more arguments than read() and write().
+
+8) close()
+
+-> It closes the connection.
+
+
+--RUNNING THE CLIENT SERVER PROGRAM--
+
+1) Open the terminal.
+2) Type ifconfig for the Server terminal to get the IP address of the server.
+3) If the communication is to be done within different machines then, use the inet addr i.e. IPv4 address of the Server.
+4) If the communication is to be done within a same machine then, use the loopback addr i.e. localhost address of the Server.
+5) Compile the Server.c file (gcc Server.c -o Server) --> A compiled file with name Server will be created.
+6) Compile the Client.c file (gcc Client.c -o Client) --> A compiled file with name Client will be created.
+7) Start the Server (./Server portno) --> port number should be greater than 1024. (There are 65,535 ports in total out of which first 1024 ports are reserved for special purposes so we can't use them.)
+8) Connect Client to the Server (./Client IP_addr portno) --> port number of Server and Client should be same.
+9) Communicate or chat and then type "Bye" for exiting.
+
+--TRANFERRING TEXT FILE FROM CLIENT TO SERVER--
+
+1)Create a text file.
+2)Create a file pointer.
+3)Open the file in read mode.
+4)Count the words in the text file and write to the server.
+5)Store the data in the buffer using a loop and write it to the server.
+6)Open a file in write mode or append mode.
+7)Read the word count written by the client.
+8)Read the data in the buffer and then write it to the file opened in the server side.
+
+--FUCTIONS FOR FILE HANDLING--
+
+1)int fputc(character, FILE *ptr);  ->returns character on success and EOF on failure.
+2)int fputs(const char *s, FILE *ptr); 
+3)int fgetc(FILE *ptr); ->returns character on success and EOF on failure.
+4)int fgets(const char *s, int n, FILE *ptr); ->int n is the number of characters to read.
+5)fprintf();
+6)fscanf();
+
+
+--Sqlite Database--
+
+1) sudo apt update
+2) sudo apt-get install sqlite3 libsqlite3-dev
+3) sqlite3 --version
+4) sqlite3 database_name.db
+5) sqlite>; (type semi-colon and press enter)
+6) press ctrl+d to exit
+7) sqlite3 database_name.db (enter)
+8) Now here you can write query for inserting, deleting, updating etc.
+
+
+--creating table query...
+
+CREATE TABLE Files(srno INTEGER PRIMARY KEY AUTOINCREMENT, filename VARCHAR(30) NOT NULL, filetype VARCHAR(5) NOT NULL, filesize INT NOT NULL, filedata BLOB NOT NULL);
+
+--compiling the c program for database connectivity...
+
+gcc db.c -o db -lsqlite3
+
+
+
+
+
+
