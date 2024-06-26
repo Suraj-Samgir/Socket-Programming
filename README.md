@@ -1,6 +1,6 @@
 # Socket Programming Projects
 
-This repository contains various socket programming projects including file transfer and chat applications. Each project demonstrates the use of sockets for communication between devices over a network. The projects are implemented in [insert programming language(s) here].
+This repository contains various socket programming projects including file transfer and chat applications. Each project demonstrates the use of sockets for communication between devices over a network. The projects are implemented in C language.
 
 ## Table of Contents
 
@@ -11,7 +11,6 @@ This repository contains various socket programming projects including file tran
 - [Installation](#installation)
 - [Usage](#usage)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Projects
 
@@ -35,8 +34,8 @@ The chat application enables real-time messaging between multiple clients. The s
 
 ## Requirements
 
-- [Programming Language](https://www.example.com): Insert the programming language(s) used (e.g., Python, Java, C++)
-- [Libraries or Dependencies](https://www.example.com): List any libraries or dependencies required (e.g., `socket`, `threading`, etc.)
+- [Programming Language](https://www.example.com): C or C++
+- [Libraries or Dependencies](https://www.example.com): Socket.h and other related libraries.
 
 ## Installation
 
